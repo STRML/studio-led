@@ -32,6 +32,16 @@ It needs root because every SMC write does. Ctrl-C, SIGTERM, or a dropped ssh se
 
 The 50 W default is a guess, since the idle draw hasn't been measured yet. Check yours with `./smcdump PD0R` before you rely on it.
 
+## Run it at boot
+
+```sh
+make
+sudo make install     # /usr/local/libexec/studio-led + /Library/LaunchDaemons/local.studio-led.plist
+tail -1 /var/log/studio-led.log
+```
+
+`sudo make uninstall` stops it, which restores the LED, and removes both files. It has to be a LaunchDaemon rather than a LaunchAgent, because a LaunchAgent runs as your user and SMC writes need root. The binary is copied to a root-owned path, so the daemon never runs a file your account can edit. To pass flags, add them to `ProgramArguments` in `local.studio-led.plist` before you install.
+
 ## The keys
 
 Apple documents none of this. These are the `LS*` SMC keys on the M5 Ultra Studio and what writing them did to the LED:
